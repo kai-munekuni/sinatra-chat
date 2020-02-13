@@ -4,17 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>Chat</title>
+  <link rel="stylesheet" href="../signin.css">
 </head>
 <body>
-  <section class="center-vertical">
-	<h1>signin</h1>
-  <a href="/sign_up"></a>
-	<form action="/sign_in" method="POST" enctype="multipart/form-data">
-		<input type="text" name="name" placeholder="ユーザー名"> <br>
-		<input type="password" name="password" placeholder="password"> <br>
-		<input type="submit" value="signin">
-	</form>
-</section>
+  <div class="form-wrapper">
+    <h1>SIGN IN</h1>
+	  <form action="/sign_in" method="POST" enctype="multipart/form-data">
+      <div class="form-item">
+        <input type="text" name="name" placeholder="ユーザー名">
+      </div>
+      <div class="form-item">
+		    <input type="password" name="password" placeholder="password">
+      </div>
+		  <div class="button-panel">
+        <input type="submit" value="SIGN IN" class="button">
+      </div>
+	  </form>
+    <div class="form-footer">
+      <p><a href="/sign_up">Create new Account</a></p>
+    </div>
+  </div>
+
+
 </body>
 </html>
