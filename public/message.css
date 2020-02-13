@@ -1,0 +1,82 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+body {
+  background-color: rgb(253, 253, 253);
+}
+#msgs {
+  width: 70vh;
+  margin: 0 auto 0;
+  padding-top: 10vh;
+}
+
+.msg {
+  font-size: 1.2em;
+  margin: 4px;
+  padding: 4px;
+  width: auto;
+}
+
+.my-msg {
+  text-align: right;
+}
+
+.my-msg > p {
+  background-color: rgb(88, 185, 104);
+  color: white;
+  display: inline-block;
+  padding: 8px;
+  border-radius: 8%;
+}
+
+.companion-msg > p {
+  background-color: rgb(209, 209, 209);
+  display: inline-block;
+  padding: 8px;
+  border-radius: 8%;
+}
+
+.header {
+  background-color: rgb(40, 173, 7);
+  padding: 8px;
+  position: fixed;
+  width: 100vw;
+}
+.header > h1 {
+  color: white;
+  margin-top: 4px;
+  margin-left: 4px;
+  display: inline-block;
+}
+.header > a {
+  float: right;
+  text-decoration: none;
+  color: white;
+  margin-right: 16px;
+  margin-top: 10px;
+  border-bottom: 1px solid white;
+}
+
+#send-msg {
+  padding: 9px;
+  margin-top: 4px;
+  border-radius: 5px;
+  font-size: 0.8em;
+  color: #474747;
+  outline: none;
+  width: 50%;
+}
+#form {
+  margin: 0 auto 30px;
+  width: 40vw;
+  text-align: right;
+}
+
+.send-btn {
+  padding: 6px;
+  border-radius: 15%;
+  color: white;
+  background-color: rgb(130, 197, 109);
+  border: none;
+}

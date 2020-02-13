@@ -8,29 +8,35 @@
   src="https://code.jquery.com/jquery-3.4.1.min.js"
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
   crossorigin="anonymous"></script>
-  <title>Document</title>
+
+  <title>Chat</title>
+  <%# <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> %>
+
+  <link rel="stylesheet" href="../message.css">
 </head>
 <body>
-<h1><%=@companion.name%>とのメッセージ</h1>
-<form id="form">
-  <input type="text" id="send-msg">
-  <input type="submit">
-</form>
+<div class="header">
+  <h1><%=@companion.name%>とのメッセージ</h1>
+  <a href="/" class="">戻る</a>
+</div>
 
 <div id="msgs">
   <% @contributions.each do |contribution|%>
     <% if contribution.user_id == current_user.id %>
-    <div class="my-msg">
-      <%= contribution.content %>
+    <div class="my-msg msg">
+      <p><%= contribution.content %></p>
     </div>
     <% else %>
-      <div class="companion-msg">
-        <%= contribution.content %>
+      <div class="companion-msg msg">
+        <p><%= contribution.content %></p>
       </div>
     <% end %>
   <% end %>
 </div>
-
+<form id="form">
+  <input type="text" id="send-msg">
+  <input type="submit" class="send-btn">
+</form>
 
 </body>
 
@@ -52,11 +58,13 @@ window.addEventListener('load', () => {
       success: function(data, textStatus, jqXHR)
       {
         let div = document.createElement('div');
+        let p = document.createElement('p');
         let msgbox = document.getElementById('msgs');
-
-        div.innerHTML = data;
-        div.className = "my-msg"
+        p.innerHTML = data
+        div.appendChild(p);
+        div.className = "my-msg msg"
         msgbox.appendChild(div, msgbox.firstChild);
+        scrollToBottom()
       },
       error: function (jqXHR, textStatus, errorThrown)
       {
@@ -66,6 +74,7 @@ window.addEventListener('load', () => {
     sendMsg.value = '';
     e.preventDefault();
   });
+  scrollToBottom()
   socketCloseListener()
 });
 
@@ -73,9 +82,12 @@ const socketMessageListener = (event) => {
   console.log(event);
   let div = document.createElement('div');
         let msgbox = document.getElementById('msgs');
-        div.innerHTML = event.data["text"];
-        div.className = "companion-msg"
+        let p = document.createElement('p');
+        p.innerHTML = event.data["text"];
+        div.appendChild(p);
+        div.className = "companion-msg msg"
         msgbox.appendChild(div, msgbox.firstChild);
+        scrollToBottom()
 };
 
 const socketOpenListener = (event) => {
@@ -92,7 +104,11 @@ const socketCloseListener = (event) => {
    socket.addEventListener('close', socketCloseListener);
 };
 
-
+const scrollToBottom = () =>{
+  const elementHtml = document.documentElement;
+  const bottom = elementHtml.scrollHeight - elementHtml.clientHeight;
+  window.scroll(0, bottom);
+}
 
 </script>
 </html>
