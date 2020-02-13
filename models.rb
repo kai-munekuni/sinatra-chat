@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   validates :name, :password, presence: true
   validates :name, uniqueness: true, format: { with: /\A\w+\z/, message: "英数字のみが使えます" }
   validates :password, format: { with: /\A\w+\z/, message: "英数字のみが使えます" }
+  has_many :participants
   has_many :rooms, through: :participants
   has_many :contributions
 end
@@ -22,9 +23,23 @@ class Contribution < ActiveRecord::Base
 end
 
 class Room < ActiveRecord::Base
+  has_many :participants
   has_many :contributions
   has_many :users, through: :participants
+
+
+  def self.create_talk(id, companion_id)
+    rooms = Participant.where("user_id = ? OR user_id = ?", id, companion_id).select(:id)
+    puts rooms
+    if rooms.count != rooms.uniq.count
+      return
+    end
+    room = Room.create()
+    Participant.create([{room_id:room.id, user_id: companion_id}, {room_id:room.id, user_id:id}])
+  end
 end
 
 class Participant < ActiveRecord::Base
+  belongs_to :room
+  belongs_to :user
 end

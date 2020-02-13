@@ -8,7 +8,6 @@ set :server, 'thin'
 set :sockets, []
 enable :sessions
 
-default_user_img_url = "https://res.cloudinary.com/djx38nyqx/image/upload/v1581414480/images.png"
 
 Dotenv.load
 Cloudinary.config do |config|
@@ -32,9 +31,9 @@ helpers do
     end
 end
 
-def upload_image(file)
+def upload_user_image(file)
   unless file
-    return default_user_img_url
+    return "https://res.cloudinary.com/djx38nyqx/image/upload/v1581414480/images.png"
   end
   tempfile = file[:tempfile]
   upload = Cloudinary::Uploader.upload(tempfile.path)
@@ -44,6 +43,7 @@ end
 
 get '/' do
   @scheme = ENV['RACK_ENV'] == "production" ? "wss://" : "ws://"
+  @rooms = current_user.rooms
   erb :index
 end
 
@@ -56,7 +56,7 @@ post "/sign_up" do
         name: params[:name],
         password: params[:password],
         password_confirmation: params[:password_confirmation],
-        img_url: upload_image(params[:file])
+        img_url: upload_user_image(params[:file])
         )
   if user.persisted?
       session[:user] = user.id
@@ -81,6 +81,17 @@ get "/sign_out" do
   redirect '/'
 end
 
+get "/new" do
+  @users = User.where.not(id: current_user.id)
+  erb :new
+end
+
+post '/room/:id' do
+  companion = User.find(params[:id])
+  room = Room.create_talk(current_user.id, companion.id)
+  redirect '/'
+end
+
 get '/websocket' do
   if request.websocket?
     request.websocket do |ws|
@@ -97,9 +108,4 @@ get '/websocket' do
       end
     end
   end
-end
-
-not_found do
-  status 404
-  erb :oops
 end
