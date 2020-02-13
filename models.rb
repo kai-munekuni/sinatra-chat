@@ -37,6 +37,11 @@ class Room < ActiveRecord::Base
     room = Room.create()
     Participant.create([{room_id:room.id, user_id: companion_id}, {room_id:room.id, user_id:id}])
   end
+
+  def self.companion_id(room_id, id)
+    companion_id = Participant.where(room_id:room_id).where.not(user_id:id)[0].user_id
+    return companion_id
+  end
 end
 
 class Participant < ActiveRecord::Base

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+  <title>Document</title>
+</head>
+<body>
+<h1><%=@companion.name%>とのメッセージ</h1>
+<form id="form">
+  <input type="text" id="send-msg">
+  <input type="submit">
+</form>
+
+<div id="msgs">
+  <% @contributions.each do |contribution|%>
+    <% if contribution.user_id == current_user.id %>
+    <div class="my-msg">
+      <%= contribution.content %>
+    </div>
+    <% else %>
+      <div class="companion-msg">
+        <%= contribution.content %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+
+</body>
+
+
+<script>
+let socket
+window.addEventListener('load', () => {
+  let form = document.getElementById('form');
+  let sendMsg = document.getElementById('send-msg');
+
+  sendMsg.addEventListener('click', () => sendMsg.value = '');
+  form.addEventListener('submit', e => {
+    let messageData = {room_id:"<%= @room.id %>"};
+    messageData.text = sendMsg.value
+    $.ajax({
+      url : "/message",
+      type: "POST",
+      data : messageData,
+      success: function(data, textStatus, jqXHR)
+      {
+        let div = document.createElement('div');
+        let msgbox = document.getElementById('msgs');
+
+        div.innerHTML = data;
+        div.className = "my-msg"
+        msgbox.appendChild(div, msgbox.firstChild);
+      },
+      error: function (jqXHR, textStatus, errorThrown)
+      {
+        console.error(textStatus)
+      }
+    });
+    sendMsg.value = '';
+    e.preventDefault();
+  });
+  socketCloseListener()
+});
+
+const socketMessageListener = (event) => {
+  console.log(event);
+  let div = document.createElement('div');
+        let msgbox = document.getElementById('msgs');
+        div.innerHTML = event.data["text"];
+        div.className = "companion-msg"
+        msgbox.appendChild(div, msgbox.firstChild);
+};
+
+const socketOpenListener = (event) => {
+   console.log('Connected');
+};
+
+const socketCloseListener = (event) => {
+   if (socket) {
+      console.log('Disconnected.');
+   }
+   socket = new WebSocket("<%=@scheme%>" + window.location.host + '/websocket');
+   socket.addEventListener('open', socketOpenListener);
+   socket.addEventListener('message', socketMessageListener);
+   socket.addEventListener('close', socketCloseListener);
+};
+
+
+
+</script>
+</html>

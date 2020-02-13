@@ -2,10 +2,11 @@ require 'bundler/setup'
 Bundler.require
 require 'sinatra/reloader' if development?
 require './models'
+require "json"
 
 
 set :server, 'thin'
-set :sockets, []
+set :sockets, {}
 enable :sessions
 
 
@@ -92,11 +93,35 @@ post '/room/:id' do
   redirect '/'
 end
 
+get '/room/:id' do
+  @scheme = ENV['RACK_ENV'] == "production" ? "wss://" : "ws://"
+  unless Participant.find_by(user_id: current_user.id, room_id: params[:id])
+    redirect '/'
+  end
+  @room = Room.find(params[:id])
+  @companion = User.find(Room.companion_id(params[:id],current_user.id))
+  @contributions = @room.contributions.order(created_at: "ASC")
+  erb :message
+end
+
+post '/message' do
+  c = Contribution.create(content:params[:text], room_id: params[:room_id],user_id:current_user.id)
+  if c
+    status 200
+    ws = settings.sockets[Room.companion_id(params[:room_id],current_user.id)]
+    if ws
+      ws.send(JSON.generate({type:"message",text:c.content}))
+    end
+    return c.content
+  end
+end
+
+
 get '/websocket' do
   if request.websocket?
     request.websocket do |ws|
       ws.onopen do
-        settings.sockets << ws
+        settings.sockets[current_user.id] = ws
       end
       ws.onmessage do |msg|
         settings.sockets.each do |s|
