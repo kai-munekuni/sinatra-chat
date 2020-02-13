@@ -9,6 +9,7 @@ body {
   width: 70vh;
   margin: 0 auto 0;
   padding-top: 12vh;
+  min-height: 80vh;
 }
 
 .msg {

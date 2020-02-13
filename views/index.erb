@@ -31,7 +31,10 @@
       <h2>
         <%=room.users.select {|user| user.id != current_user.id}[0].name%>
       </h2>
-      <p><%= room.contributions.last.content %></p>
+      <% talk = room.contributions.last %>
+      <% if talk %>
+        <%= talk.content %>
+      <% end %>
     </div>
   </a>
   <%end%>

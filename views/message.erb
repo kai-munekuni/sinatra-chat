@@ -84,7 +84,8 @@ const socketMessageListener = (event) => {
   let div = document.createElement('div');
         let msgbox = document.getElementById('msgs');
         let p = document.createElement('p');
-        p.innerHTML = event.data["text"];
+        text = JSON.parse(event.data)["text"]
+        p.innerHTML = text
         div.appendChild(p);
         div.className = "companion-msg msg"
         msgbox.appendChild(div, msgbox.firstChild);
