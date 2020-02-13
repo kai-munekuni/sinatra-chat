@@ -7,24 +7,35 @@
   src="https://code.jquery.com/jquery-3.4.1.min.js"
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
   crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../header.css">
 </head>
 <body>
-<a href="/new" class=""></a>
+  <a href="" class="upper" >チャット作成</a>
   <% if !current_user.nil? %>
   <div class="header">
-		<h2><%= current_user.name %>さん、ようこそ！</h2>
+		<h1><%= current_user.name %>さん、ようこそ！</h1>
 		<a href="/sign_out">logout</a>
   </div>
 	<% else %>
 		<a href="/sign_up">新規登録</a>
 	<% end %>
+  <section id="main">
   <%if @rooms.count == 0%>
-    現在チャットルームがありません
+    現在チャットがありません
+    <a href="/new" class="">チャット新規作成</a>
   <%end%>
   <%@rooms.each do |room|%>
-  <a href="/room/<%= room.id %>" class=""><%=room.users.select {|user| user.id != current_user.id}[0].name%></a>
-
+  <a href="/room/<%= room.id %>" class="">
+    <div class="room">
+      <h2>
+        <%=room.users.select {|user| user.id != current_user.id}[0].name%>
+      </h2>
+      <p><%= room.contributions.last.content %></p>
+    </div>
+  </a>
   <%end%>
+  </section>
 </body>
 
 <script>

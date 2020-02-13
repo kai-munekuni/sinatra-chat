@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+}
+
+body {
+  background-color: rgb(253, 253, 253);
+}
+#main {
+  padding-top: 10vh;
+  width: 90vh;
+  margin: 0 auto 0;
+}
+
+.room {
+  background-color: rgb(247, 247, 247);
+  padding: 24px;
+  color: black;
+  border-radius: 3%;
+}
+.room > p {
+  color: rgb(83, 83, 83);
+}
+
+.upper {
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+  transition: 0.5s;
+  font-size: 1.2em;
+  background-color: rgb(40, 173, 7);
+  padding: 8px;
+  color: white;
+  border-radius: 3%;
+  border: 1px solid rgb(40, 173, 7);
+}
+.upper:hover {
+  transition: 0.5s;
+  color: rgb(40, 173, 7);
+  background-color: white;
+}

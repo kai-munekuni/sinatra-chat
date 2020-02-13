@@ -8,7 +8,7 @@ body {
 #msgs {
   width: 70vh;
   margin: 0 auto 0;
-  padding-top: 10vh;
+  padding-top: 12vh;
 }
 
 .msg {
@@ -35,27 +35,6 @@ body {
   display: inline-block;
   padding: 8px;
   border-radius: 8%;
-}
-
-.header {
-  background-color: rgb(40, 173, 7);
-  padding: 8px;
-  position: fixed;
-  width: 100vw;
-}
-.header > h1 {
-  color: white;
-  margin-top: 4px;
-  margin-left: 4px;
-  display: inline-block;
-}
-.header > a {
-  float: right;
-  text-decoration: none;
-  color: white;
-  margin-right: 16px;
-  margin-top: 10px;
-  border-bottom: 1px solid white;
 }
 
 #send-msg {
