@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>チャット</title>
+</head>
+<body>
+  <% if !current_user.nil? %>
+		<a href="/home"><img src="<%= current_user.img_url %>" alt="user_image" width="40" height="40"></a>
+		<h2>hi <%= current_user.name %></h2>
+		<a href="/sign_out">logout</a>
+	<% else %>
+		<a href="/sign_up">新規登録</a>
+	<% end %>
+
+  <form id="form">
+    <input type="text" id="send-msg">
+    <input type="submit">
+  </form>
+  <ul id="msgs"></ul>
+</body>
+
+<script>
+let socket
+window.addEventListener('load', () => {
+  let form = document.getElementById('form');
+  let sendMsg = document.getElementById('send-msg');
+
+  sendMsg.addEventListener('click', () => sendMsg.value = '');
+  form.addEventListener('submit', e => {
+    socket.send(sendMsg.value);
+    sendMsg.value = '';
+    e.preventDefault();
+    });
+  socketCloseListener()
+});
+
+const socketMessageListener = (event) => {
+  console.log(event);
+  let li = document.createElement('li');
+  let msgbox = document.getElementById('msgs');
+  li.textContent = event.data;
+  msgbox.insertBefore(li, msgbox.firstChild);
+};
+
+const socketOpenListener = (event) => {
+   console.log('Connected');
+};
+
+const socketCloseListener = (event) => {
+   if (socket) {
+      console.log('Disconnected.');
+   }
+   socket = new WebSocket("<%=@scheme%>" + window.location.host + '/websocket');
+   socket.addEventListener('open', socketOpenListener);
+   socket.addEventListener('message', socketMessageListener);
+   socket.addEventListener('close', socketCloseListener);
+};
+</script>
+</html>
